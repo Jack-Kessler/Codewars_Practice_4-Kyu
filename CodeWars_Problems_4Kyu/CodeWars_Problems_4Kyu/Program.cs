@@ -1,102 +1,160 @@
 ﻿//-----------------------------------------------------------------------------------------------------------------------------
 // Sum of Intervals (4-Kyu) (Completed 2/6/2023 - 15th Day of Class)
-using System.Collections;
 
-(int, int)[] intervals = {
-(-79, -77),
-(-444, -430),
-(440, 455),
-(302, 319),
-(141, 155),
-(421, 427),
-(404, 416),
-(-415, -403),
-(295, 309),
-(-90, -79),
-(-248, -244),
-(0,0),
-(427,440),
-(-480, -474)
-    };
+//**** Efficient Method ****
 
-int i = 0;
+//(int, int)[] intervals = {
 
-//First - the above is called a "Tuple Array"
-//Below is how you access each sub element of a tupple array
+//   (-7, 8), (-2, 10), (5, 15), (2000, 3150), (-5400, -5338)
 
-//for (i = 0; i < myArray.Length; i++)
+////(-35, -25),
+////(178, 179),
+////(422, 436),
+////(-358, -349),
+////(403, 416),
+////(125, 131),
+////(462, 479),
+////(305, 319),
+////(-338, -328),
+////(248, 257),
+////(-378, -359),
+////(-234, -214),
+////(164, 170),
+////(-368, -348)
+
+////expected 150
+
+////was 159
+//    };
+
+//int i = 0;
+
+//(int, int)[] intervals2 = new (int, int)[intervals.Length];
+
+//for (i = 0; i < intervals.Length; i++)
 //{
-//    Console.WriteLine(myArray[i].Item1);
-//    Console.WriteLine(myArray[i].Item2);
+//    intervals2[i].Item1 = intervals[i].Item1;
+//    intervals2[i].Item2 = intervals[i].Item2;
+//    //Console.WriteLine(intervals2[i].Item1);
+//    //Console.WriteLine(intervals2[i].Item2);
 //}
 
-int k = 0;
+//intervals2 = intervals2.OrderBy(t => t.Item1).ThenBy(t => t.Item2).ToArray();
 
-for (i = 0; i < intervals.Length; i++)
-{
-    k = 1;
-    if (intervals[i].Item1 == intervals[i].Item2)
-    {
-        k = 1;
-    }
-    else
-    {
-        while (i + k < intervals.Length)
-        {
-            //Case 1: a, c, b, d
-            if (intervals[i + k].Item1 >= intervals[i].Item1 && intervals[i + k].Item1 <= intervals[i].Item2 && intervals[i + k].Item2 > intervals[i].Item2)
-            {
-                intervals[i + k].Item1 = intervals[i].Item2;
-            }
-            //Case 5: a, c, d, b
-            else if (intervals[i + k].Item1 >= intervals[i].Item1 && intervals[i + k].Item1 <= intervals[i].Item2 && intervals[i + k].Item2 <= intervals[i].Item2)
-            {
-                intervals[i + k].Item1 = 0;
-                intervals[i + k].Item2 = 0;
-            }
-            //Case 2: c, a, d, b
-            else if (intervals[i + k].Item1 < intervals[i].Item1 && intervals[i + k].Item2 >= intervals[i].Item1 && intervals[i + k].Item2 <= intervals[i].Item2)
-            {
-                intervals[i + k].Item2 = intervals[i].Item1;
-            }
-            //Case 4: c, d, a, b OR a, b, c, d
-            else if (intervals[i + k].Item2 <= intervals[i].Item1 || intervals[i + k].Item1 >= intervals[i].Item2)
-            {
-                //no action needed
-            }
-            //Case 3: c, a, b, d
-            else if (intervals[i + k].Item1 <= intervals[i].Item1 && intervals[i + k].Item2 >= intervals[i].Item2)
-            {   
-                intervals[i].Item1 = intervals[i+k].Item1;
-                intervals[i].Item2 = intervals[i+k].Item2;
+////for (i = 0; i < intervals2.Length; i++)
+////{
+////    //    Console.WriteLine(intervals2[i].Item1);
+////    //    Console.WriteLine(intervals2[i].Item2);
+////    //Console.WriteLine(intervals2[i]);
+////}
 
-                intervals[i+k].Item1 = 0;
-                intervals[i+k].Item2= 0;
-            }
-            else
-            {
-                Console.WriteLine("Error: Should never happen");
-            }
-            k++;
-        }
-    } 
-}
-
-//Check to make sure myArray has been modified in the correct way
-
-//for (i = 0; i < myArray.Length; i++)
+//for (i = 0; i + 1 < intervals2.Length; i++)
 //{
-//    Console.WriteLine(myArray[i].Item1);
-//    Console.WriteLine(myArray[i].Item2);
+//    if (intervals2[i].Item2 > intervals2[i + 1].Item1)
+//    {
+//        intervals2[i + 1].Item1 = intervals2[i].Item2;
+
+//        if (intervals2[i + 1].Item1 > intervals2[i + 1].Item2)
+//        {
+//            intervals2[i + 1].Item2 = intervals2[i + 1].Item1;
+//        }
+//        intervals2 = intervals2.OrderBy(t => t.Item1).ThenBy(t => t.Item2).ToArray();
+//        i--;
+//    }
 //}
 
-int total = 0;
+//for (i = 0; i < intervals2.Length; i++)
+//{
+//    //    Console.WriteLine(intervals2[i].Item1);
+//    //    Console.WriteLine(intervals2[i].Item2);
+//    //    Console.WriteLine(intervals2[i]);
+//}
+//int total = 0;
 
-for (i = 0; i < intervals.Length; i++)
-{
-    total += intervals[i].Item2 - intervals[i].Item1;
-}
+//for (i = 0; i < intervals2.Length; i++)
+//{
+//    total += intervals2[i].Item2 - intervals2[i].Item1;
+//}
 
-Console.WriteLine(total);
+//// Console.WriteLine(total);
 
-//return total;
+////return total;
+
+
+///----------------------------------------------------------------
+
+//**** Method Below works but times out ****
+
+//(int, int)[] intervals = {
+
+//    //(1, 2), (6, 10), (11, 15)
+
+////(-35, -25),
+////(178, 179),
+////(422, 436),
+////(-358, -349),
+////(403, 416),
+////(125, 131),
+////(462, 479),
+////(305, 319),
+////(-338, -328),
+////(248, 257),
+////(-378, -359),
+////(-234, -214),
+////(164, 170),
+////(-368, -348)
+
+////expected 150
+
+////was 159
+//    };
+
+//int[] myArray = { -1000000001 };
+
+//int i = 0;
+//int j = 0;
+//int k = 0;
+
+//int a = 0;
+//int b = 0;
+
+//bool alreadyInArray = false;
+
+//int finalNumber = 0;
+
+//for (i = 0; i < intervals.Length; i++)
+//{
+//    if (intervals[i].Item1 != intervals[i].Item2) // Making sure a is not equal to b
+//    {
+//        a = intervals[i].Item1;
+//        b = intervals[i].Item2;
+
+//        for (j = a; j < b; j++) // From a to b
+//        {
+//            for (k = 0; k < myArray.Length; k++) //Iterate through each index of myArray to make sure no duplicates
+//            {
+//                if (myArray[k] == j) //Case where already in array, don't add again
+//                {
+//                    alreadyInArray = true;
+//                    break;
+//                }
+//            }
+//            if (alreadyInArray == false) // Case where not yet in array. Want to add to array then.
+//            {
+//                myArray = myArray.Append(j).ToArray(); //adding to end of the array
+//            }
+//            alreadyInArray = false; //reset back to false to get ready for next iteration of loop
+//        }
+//    }
+//}
+
+//for (i = 1; i < myArray.Length; ++i) //Note: we do not want to count entry in index 0 as that was just inserted to initialize the array
+//{
+//    finalNumber++;
+//}
+
+//Console.WriteLine(finalNumber);
+
+//return finalNumber;
+
+//-----------------------------------------------------------------------------------------------------------------------------
