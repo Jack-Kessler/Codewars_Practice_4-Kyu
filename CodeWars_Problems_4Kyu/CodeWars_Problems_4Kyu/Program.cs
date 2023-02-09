@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 
-long n = 123456798;
+long n = 51226262651257;
 long result = 0;
 
 int duplicateCounter = 0;
@@ -16,6 +16,7 @@ int notZeroIndex =0;
 int i = 0;
 int j = 0;
 int x = 0;
+int a = -1;
 
 int indexOneValue = 0;
 int counter = 1;
@@ -242,12 +243,23 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                         result = 10 * result + p;
                     }
                 }
-                else if (originalOrder[0] > originalOrder[1] && originalOrder[2] > originalOrder[1]) //Ex. 513 ---> 351
+                else if (originalOrder[0] > originalOrder[1] && originalOrder[2] > originalOrder[1] && originalOrder[0] > originalOrder[2]) //Ex. 513 ---> 351
                                                                                                      //(Note: 531 case was taken care of above)
                 {
                     resultList.Add(originalOrder[2]);
                     resultList.Add(originalOrder[0]);
                     resultList.Add(originalOrder[1]);
+                    foreach (long p in resultList)
+                    {
+                        result = 10 * result + p;
+                    }
+                }
+                else if (originalOrder[0] > originalOrder[1] && originalOrder[2] > originalOrder[1] && originalOrder[2] > originalOrder[0]) //Ex. 315 ---> 351
+                                                                                                     //(Note: 531 case was taken care of above)
+                {
+                    resultList.Add(originalOrder[1]);
+                    resultList.Add(originalOrder[2]);
+                    resultList.Add(originalOrder[0]);
                     foreach (long p in resultList)
                     {
                         result = 10 * result + p;
@@ -277,6 +289,26 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
         if (zeroCounter == originalOrder.Length - 1) // All but 1 digit (original first digit) are zeros. Ex. 500000 or 70000000000000
         {
             result = -1;
+        }
+        else if (originalOrder[originalOrder.Length - 1] < originalOrder[originalOrder.Length -2])
+        {
+            for (i = 0; i < originalOrder.Length - 2; i++)
+            {
+                resultList.Add(originalOrder[i]); //Create duplicate list of original order array
+            }
+            for (i = 0; i < 1; i++)
+            {
+                resultList.Add(originalOrder[originalOrder.Length - 1]);
+            }
+            for (i = 0; i < 1; i++)
+            {
+                resultList.Add(originalOrder[originalOrder.Length - 2]);
+            }
+            foreach (long p in resultList)
+            {
+                result = 10 * result + p;
+            }
+
         }
         else if (zeroCounter == originalOrder.Length - 2) //All but 2 digits (original first digit + one more) are zeros.
                                                             //Note: does not matter if duplicate or nOT
@@ -394,7 +426,6 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                 }
                 else //Number of digits is at least 4
                         //Original first digit was smallest non-zero digit
-                        //Case: first original digit has at least one duplicate
                         //At least 3 non - zero digits that are not the same
                         //Number of zeros range from 0 to (total number of digits - 2)
                         //Ex. 50765 (sorted: <05567>) or 58765 (sorted: <55678>) or 50075 (sorted: 00557) etc...
@@ -403,6 +434,32 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                     if (originalOrder[1] == 0) //Ex. 50765
                     {
                         result = -1;
+                    }
+                    else if (originalOrder[originalOrder.Length - 2] == 0 &&
+                             originalOrder[originalOrder.Length - 1] != 0 &&
+                             originalOrder[originalOrder.Length - 3] > originalOrder[originalOrder.Length - 1])
+                    {
+                        resultList.Clear();
+                        for (j = 0; j < originalOrder.Length - 3; j++)
+                        {
+                            resultList.Add(originalOrder[j]); //Create duplicate list of original order array
+                        }
+                        for (j = 0; j < 1; j++)
+                        {
+                            resultList.Add(originalOrder[originalOrder.Length - 1]);
+                        }
+                        for (j = 0; j < 1; j++)
+                        {
+                            resultList.Add(originalOrder[originalOrder.Length - 3]);
+                        }
+                        for (j = 0; j < 1; j++)
+                        {
+                            resultList.Add(originalOrder[originalOrder.Length - 2]);
+                        }
+                        foreach (long p in resultList)
+                        {
+                            result = 10 * result + p;
+                        }
                     }
                     else // digit next to first digit has to be equal to or greater than first digit.
                             // Ex. 567085 or 556708
@@ -518,7 +575,7 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                                     {
                                         if (counter2 == 1 && counter == 1)
                                         {
-                                            tempList.Add(originalOrder.Length - 1);
+                                            tempList.Add(originalOrder[originalOrder.Length - 1]);
                                         }
                                         tempList.Add(originalOrder[i - counter]);
                                         counter++;
@@ -629,6 +686,58 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                             }
                             else if (originalOrder[j - counter] > originalOrder[j])
                             {
+                                for (x = 0; x <tempList.Count(); x++)
+                                {
+                                    if (tempList[x] != 0 && tempList[x] > a && tempList[x] < originalOrder[j - counter +1])
+                                    {
+                                        a = tempList[x];
+                                    }
+                                }
+                                if (a != -1)
+                                {
+                                    for (x = 0; x < tempList.Count(); x++)
+                                    {
+                                        if (tempList[x] == a)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    tempList.Clear();
+
+                                    for (int y = originalOrder.Length - 1; y > originalOrder.Length - 1 - x; y--)
+                                    {
+                                        tempList.Add(originalOrder[y]);
+                                    }
+                                    for (int y = originalOrder.Length - 1 - x - 1; y > j - counter; y--)
+                                    {
+                                        tempList.Add(originalOrder[y]);
+                                    }
+                                    tempList.Sort();
+                                    tempList.Reverse();
+                                    //Now a is largest digit less than digit at (j - counter +1)
+                                    for (int y = 0; y < j - counter + 1; y++)
+                                    {
+                                        resultList.Add(originalOrder[y]); //Adds up to flip point
+                                    }
+                                    for (int y = j - counter + 1; y < j - counter + 2; y++)
+                                    {
+                                        resultList.Add(originalOrder[a]);
+                                    }
+                                    for (int y = 0; y < tempList.Count(); y++) // Remember: tempList is sorted greatest to smallest
+                                    {
+                                        resultList.Add(tempList[y]); //Adds rest of digits sorted greatest to smallest
+                                    }
+                                    //for (int y = 0; y < resultList.Count(); y++)
+                                    //{
+                                    //    Console.WriteLine(resultList[y]);
+                                    //}
+                                    foreach (long p in resultList)
+                                    {
+                                        result = 10 * result + p;
+                                    }
+                                    done = true;
+                                    break;
+                                }
                                 tempList.RemoveAt(counter2 - 1); //Remove to avoid double add
                                 tempList.Add(originalOrder[j - counter]); // Add so we can sort.
                                 tempList.Sort(); //Sorts list from smallest to biggest
@@ -661,7 +770,7 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                             {
                                 if (counter2 == 1 && counter == 1)
                                 {
-                                    tempList.Add(originalOrder.Length -1);
+                                    tempList.Add(originalOrder[originalOrder.Length -1]);
                                 }
                                 tempList.Add(originalOrder[j - counter]);
                                 counter++;
@@ -691,6 +800,7 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
 }
 
 Console.WriteLine(result);
+//return result;
 
 
 //-----------------------------------------------------------------------------------------------------------------------------
