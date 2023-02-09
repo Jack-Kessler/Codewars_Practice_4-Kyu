@@ -2,6 +2,7 @@
 
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 
@@ -428,7 +429,51 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                                 {
                                     while (counter <= originalOrder.Length - counter2)
                                     {
-                                        if (originalOrder[i - counter] > originalOrder[i])
+                                        if (originalOrder[i] == 0)
+                                        {
+                                            tempList.Clear();
+                                            for (j = originalOrder.Length - 1; j > i; j--) 
+                                            {
+                                                tempList.Add(originalOrder[j]); //templist has everything to right of zero.
+                                            }
+                                            for (j = i - 1; j >= 0; j--)
+                                            {
+                                                if (originalOrder[j] != 0) // j is the same as non-zero index. This conditional must be true.
+                                                {
+                                                    break;
+                                                }
+                                            }
+                                            for (x = j; x < i; x++) //Need to add digits between zero index and nearest non-zero digit to left.
+                                                                    //Remember: i is index for zero. j is nearest non-zero to the left.
+                                            {
+                                                tempList.Add(originalOrder[x]);
+                                            }
+                                            tempList.Sort(); //Sorts list from smallest to biggest
+                                            tempList.Reverse(); // Now sorted from biggest to smallest
+                                            for (x = 0; x < j; x++)
+                                            {
+                                                resultList.Add(originalOrder[x]); //Add up to closest non-zero digit to zero
+                                            }
+                                            for (x = 0; x < 1; x++)
+                                            {
+                                                resultList.Add(originalOrder[i]); //Add zero
+                                            }
+                                            for (x = 0; x < tempList.Count(); x++) // Remember: tempList is sorted greatest to smallest
+                                            {
+                                                resultList.Add(tempList[x]);
+                                            }
+                                            foreach (long p in resultList)
+                                            {
+                                                result = 10 * result + p;
+                                            }
+                                            done = true;
+                                            break;
+                                        }
+                                        else if (originalOrder[i - counter] == 0)
+                                        {
+                                            break;
+                                        }
+                                        else if (originalOrder[i - counter] > originalOrder[i])
                                         {
                                             tempList.Add(originalOrder[i - counter]);
                                             tempList.Sort(); //Sorts list from smallest to biggest
@@ -461,11 +506,11 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                                     }
                                     counter = 1;
                                     counter2++;
-                                    if (counter2 == 2)
+                                    tempList.Clear();
+                                    for (j = originalOrder.Length - 1; j > originalOrder.Length - 1 - counter2; j--)
                                     {
-                                        tempList.Insert(0,originalOrder[originalOrder.Length - 1]);
+                                        tempList.Add(originalOrder[j]);
                                     }
-                                    tempList.RemoveRange(counter2, tempList.Count() - counter2); //Removes all entries in list except the ones we want to keep. Don't want to duplicate when we add to list next iteration.
                                     if (done == true)
                                     {
                                         break;
