@@ -1,0 +1,15 @@
+C:\Users\jack_\OneDrive\Desktop\Repos\CodeWars_Problems\4-Kyu\TEMP\TEMP\bin\Debug\net6.0\TEMP.exe
+C:\Users\jack_\OneDrive\Desktop\Repos\CodeWars_Problems\4-Kyu\TEMP\TEMP\bin\Debug\net6.0\TEMP.deps.json
+C:\Users\jack_\OneDrive\Desktop\Repos\CodeWars_Problems\4-Kyu\TEMP\TEMP\bin\Debug\net6.0\TEMP.runtimeconfig.json
+C:\Users\jack_\OneDrive\Desktop\Repos\CodeWars_Problems\4-Kyu\TEMP\TEMP\bin\Debug\net6.0\TEMP.dll
+C:\Users\jack_\OneDrive\Desktop\Repos\CodeWars_Problems\4-Kyu\TEMP\TEMP\bin\Debug\net6.0\TEMP.pdb
+C:\Users\jack_\OneDrive\Desktop\Repos\CodeWars_Problems\4-Kyu\TEMP\TEMP\obj\Debug\net6.0\TEMP.csproj.AssemblyReference.cache
+C:\Users\jack_\OneDrive\Desktop\Repos\CodeWars_Problems\4-Kyu\TEMP\TEMP\obj\Debug\net6.0\TEMP.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jack_\OneDrive\Desktop\Repos\CodeWars_Problems\4-Kyu\TEMP\TEMP\obj\Debug\net6.0\TEMP.AssemblyInfoInputs.cache
+C:\Users\jack_\OneDrive\Desktop\Repos\CodeWars_Problems\4-Kyu\TEMP\TEMP\obj\Debug\net6.0\TEMP.AssemblyInfo.cs
+C:\Users\jack_\OneDrive\Desktop\Repos\CodeWars_Problems\4-Kyu\TEMP\TEMP\obj\Debug\net6.0\TEMP.csproj.CoreCompileInputs.cache
+C:\Users\jack_\OneDrive\Desktop\Repos\CodeWars_Problems\4-Kyu\TEMP\TEMP\obj\Debug\net6.0\TEMP.dll
+C:\Users\jack_\OneDrive\Desktop\Repos\CodeWars_Problems\4-Kyu\TEMP\TEMP\obj\Debug\net6.0\refint\TEMP.dll
+C:\Users\jack_\OneDrive\Desktop\Repos\CodeWars_Problems\4-Kyu\TEMP\TEMP\obj\Debug\net6.0\TEMP.pdb
+C:\Users\jack_\OneDrive\Desktop\Repos\CodeWars_Problems\4-Kyu\TEMP\TEMP\obj\Debug\net6.0\TEMP.genruntimeconfig.cache
+C:\Users\jack_\OneDrive\Desktop\Repos\CodeWars_Problems\4-Kyu\TEMP\TEMP\obj\Debug\net6.0\ref\TEMP.dll
