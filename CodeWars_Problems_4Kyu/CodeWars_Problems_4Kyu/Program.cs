@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 
-long n = 57500589;
+long n = 57505554;
 long result = 0;
 
 int duplicateCounter = 0;
@@ -475,28 +475,54 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                                         }
                                         else if (originalOrder[i - counter] > originalOrder[i])
                                         {
-                                            tempList.Add(originalOrder[i - counter]);
-                                            tempList.Sort(); //Sorts list from smallest to biggest
-                                            tempList.Reverse(); // Now sorted from biggest to smallest
+                                            if (originalOrder[i - counter] == originalOrder[originalOrder.Length - 2] &&
+                                                originalOrder[i] == originalOrder[originalOrder.Length - 1])
+                                            {
+                                                for (x = 0; x < i - counter; x++)
+                                                {
+                                                    resultList.Add(originalOrder[x]); //Adds up to flip point
+                                                }
+                                                for (x = 0; x < 1; x++)
+                                                {
+                                                    resultList.Add(originalOrder[i]); //Adds flip digit
+                                                }
+                                                for (x = 0; x < 1; x++) // Remember: tempList is sorted greatest to smallest
+                                                {
+                                                    resultList.Add(originalOrder[i - 1]); //Adds rest of digits sorted greatest to smallest
+                                                }
+                                                foreach (long p in resultList)
+                                                {
+                                                    result = 10 * result + p;
+                                                }
+                                                done = true;
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                tempList.RemoveAt(counter2 - 1); //Remove to avoid double add
+                                                tempList.Add(originalOrder[i - counter]); // Add so we can sort.
+                                                tempList.Sort(); //Sorts list from smallest to biggest
+                                                tempList.Reverse(); // Now sorted from biggest to smallest
 
-                                            for (j = 0; j < i - counter; j++)
-                                            {
-                                                resultList.Add(originalOrder[j]);
+                                                for (j = 0; j < i - counter; j++)
+                                                {
+                                                    resultList.Add(originalOrder[j]);
+                                                }
+                                                for (j = i - counter; j < i - counter + 1; j++)
+                                                {
+                                                    resultList.Add(originalOrder[i]);
+                                                }
+                                                for (j = 0; j < tempList.Count(); j++) // Remember: tempList is sorted greatest to smallest
+                                                {
+                                                    resultList.Add(tempList[j]);
+                                                }
+                                                foreach (long p in resultList)
+                                                {
+                                                    result = 10 * result + p;
+                                                }
+                                                done = true;
+                                                break;
                                             }
-                                            for (j = i - counter; j < i - counter + 1; j++)
-                                            {
-                                                resultList.Add(originalOrder[i]);
-                                            }
-                                            for (j = 0; j < tempList.Count(); j++) // Remember: tempList is sorted greatest to smallest
-                                            {
-                                                resultList.Add(tempList[j]);
-                                            }
-                                            foreach (long p in resultList)
-                                            {
-                                                result = 10 * result + p;
-                                            }
-                                            done = true;
-                                            break;
                                         }
                                         else
                                         {
@@ -530,9 +556,8 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                 for (j = originalOrder.Length - 1; j >= 0; j--)
                 {
                     if (counter2 == originalOrder.Length - 1)
-
                     {
-                        if (originalOrder[0] > originalOrder[originalOrder.Length - 1])
+                        if (originalOrder[0] > originalOrder[originalOrder.Length - 1]) //case where first digit is only digit greater than last digit
                         {
                             tempList.Clear();
                             for (x = 0; x < originalOrder.Length - 1; x++)
@@ -567,28 +592,54 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                         {
                             if (originalOrder[j - counter] > originalOrder[j])
                             {
-                                tempList.Add(originalOrder[j - counter]);
-                                tempList.Sort(); //Sorts list from smallest to biggest
-                                tempList.Reverse(); // Now sorted from biggest to smallest
+                                if (originalOrder[j - counter] == originalOrder[originalOrder.Length - 2] &&
+                                    originalOrder[j] == originalOrder[originalOrder.Length - 1])
+                                {
+                                    for (x = 0; x < j - counter; x++)
+                                    {
+                                        resultList.Add(originalOrder[x]); //Adds up to flip point
+                                    }
+                                    for (x = 0; x < 1; x++)
+                                    {
+                                        resultList.Add(originalOrder[j]); //Adds flip digit
+                                    }
+                                    for (x = 0; x < 1; x++) // Remember: tempList is sorted greatest to smallest
+                                    {
+                                        resultList.Add(originalOrder[j - 1]); //Adds rest of digits sorted greatest to smallest
+                                    }
+                                    foreach (long p in resultList)
+                                    {
+                                        result = 10 * result + p;
+                                    }
+                                    done = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    tempList.RemoveAt(counter2 - 1); //Remove to avoid double add
+                                    tempList.Add(originalOrder[j - counter]); // Add so we can sort.
+                                    tempList.Sort(); //Sorts list from smallest to biggest
+                                    tempList.Reverse(); // Now sorted from biggest to smallest
 
-                                for (x = 0; x < j - counter; x++)
-                                {
-                                    resultList.Add(originalOrder[x]);
+                                    for (x = 0; x < j - counter; x++)
+                                    {
+                                        resultList.Add(originalOrder[x]); //Adds up to flip point
+                                    }
+                                    for (x = j - counter; x < j - counter + 1; x++)
+                                    {
+                                        resultList.Add(originalOrder[j]); //Adds flip digit
+                                    }
+                                    for (x = 0; x < tempList.Count(); x++) // Remember: tempList is sorted greatest to smallest
+                                    {
+                                        resultList.Add(tempList[x]); //Adds rest of digits sorted greatest to smallest
+                                    }
+                                    foreach (long p in resultList)
+                                    {
+                                        result = 10 * result + p;
+                                    }
+                                    done = true;
+                                    break;
                                 }
-                                for (x = j - counter; x < j - counter + 1; x++)
-                                {
-                                    resultList.Add(originalOrder[j]);
-                                }
-                                for (x = 0; x < tempList.Count(); x++) // Remember: tempList is sorted greatest to smallest
-                                {
-                                    resultList.Add(tempList[x]);
-                                }
-                                foreach (long p in resultList)
-                                {
-                                    result = 10 * result + p;
-                                }
-                                done = true;
-                                break;
                             }
                             else
                             {
@@ -598,11 +649,11 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                         }
                         counter = 1;
                         counter2++;
-                        if (counter2 == 2)
+                        tempList.Clear();
+                        for (x = originalOrder.Length - 1; x > originalOrder.Length - 1 - counter2; x--)
                         {
-                            tempList.Insert(0,originalOrder[originalOrder.Length - 1]);
+                            tempList.Add(originalOrder[x]);
                         }
-                        tempList.RemoveRange(counter2, tempList.Count() - counter2); //Removes all entries in list except the ones we want to keep. Don't want to duplicate when we add to list next iteration.
                         if (done == true)
                         {
                             break;
