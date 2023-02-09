@@ -6,14 +6,13 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 
-long n = 57505554;
+long n = 123456798;
 long result = 0;
 
 int duplicateCounter = 0;
 int zeroCounter = 0;
 int numberOfDuplicates = 0;
 int notZeroIndex =0;
-int zeroIndex = 0;
 int i = 0;
 int j = 0;
 int x = 0;
@@ -100,8 +99,8 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                     else // Ex. 605
                     {
                         resultList.Add(originalOrder[2]);
-                        resultList.Add(originalOrder[1]);
                         resultList.Add(originalOrder[0]);
+                        resultList.Add(originalOrder[1]);
                         foreach (long p in resultList)
                         {
                             result = 10 * result + p;
@@ -356,111 +355,130 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
 
             if (resultList[notZeroIndex] == originalFirstDigit) //**** Case: original first digit was smallest non-zero digit *****
             {
-                //In this case, if there is no duplicate of original first digit...
-                //then it is impossible to create a smaller number not starting with zero
-                if (numberOfDuplicates == 0)
+                if (numberOfDuplicates == originalOrder.Length - 2) //Case: all digits except one are duplicates. Ex. 55550 or 50555
                 {
-                    result = -1;
-                }
-                else //Case: first original digit has at least one duplicate
-                        //Ex. 50765 or 58765 or 55505 or 55550
-                {
-                    if (numberOfDuplicates == originalOrder.Length - 2) //Case: all digits except one are duplicates. Ex. 55550 or 50555
+                    if (originalOrder[1] == 0) //Ex. 50555
                     {
-                        if (originalOrder[1] == 0) //Ex. 50555
+                        result = -1;
+                    }
+                    else //Ex. 55550 or 55505
+                    {
+                        resultList.Clear();
+                        for (j = 0; j < originalOrder.Length; j++)
                         {
-                            result = -1;
+                            if (originalOrder[j] == 0)      // j is zero index
+                            {
+                                break;
+                            }
                         }
-                        else //Ex. 55550 or 55505
+                        for (x = 0; x < originalOrder.Length; x++)
                         {
-                            for (i = 0; i < originalOrder.Length; i++)
+                            if (x == j)
                             {
-                                if (originalOrder[i] == 0)                 //Finding index of the only zero digit
-                                {
-                                    zeroIndex = i;
-                                    break;
-                                }
+                                resultList.Add(originalOrder[j - 1]);
                             }
-                            for (i = 0; i < originalOrder.Length; i++)
+                            else if (x == j - 1)
                             {
-                                if (i == zeroIndex)
-                                {
-                                    resultList.Add(originalOrder[i - 1]);
-                                }
-                                else if (i == zeroIndex - 1)
-                                {
-                                    resultList.Add(originalOrder[zeroIndex]);
-                                }
-                                else
-                                {
-                                    resultList.Add(originalOrder[i]);
-                                }
+                                resultList.Add(originalOrder[j]);
                             }
-                            foreach (long p in resultList)
+                            else
                             {
-                                result = 10 * result + p;
+                                resultList.Add(originalOrder[x]);
                             }
+                        }
+                        foreach (long p in resultList)
+                        {
+                            result = 10 * result + p;
                         }
                     }
-                    else //Number of digits is at least 4
-                            //Original first digit was smallest non-zero digit
-                            //Case: first original digit has at least one duplicate
-                            //At least 3 non - zero digits that are not the same
-                            //Number of zeros range from 0 to (total number of digits - 2)
-                            //Ex. 50765 (sorted: <05567>) or 58765 (sorted: <55678>) or 50075 (sorted: 00557) etc...
+                }
+                else //Number of digits is at least 4
+                        //Original first digit was smallest non-zero digit
+                        //Case: first original digit has at least one duplicate
+                        //At least 3 non - zero digits that are not the same
+                        //Number of zeros range from 0 to (total number of digits - 2)
+                        //Ex. 50765 (sorted: <05567>) or 58765 (sorted: <55678>) or 50075 (sorted: 00557) etc...
+                {
+                    indexOneValue = originalOrder[1];
+                    if (originalOrder[1] == 0) //Ex. 50765
                     {
-                        indexOneValue = originalOrder[1];
-                        if (originalOrder[1] == 0) //Ex. 50765
+                        result = -1;
+                    }
+                    else // digit next to first digit has to be equal to or greater than first digit.
+                            // Ex. 567085 or 556708
+                    {
+                        resultList.Clear();
+                        for (i = originalOrder.Length - 1; i >= 0; i--)
                         {
-                            result = -1;
-                        }
-                        else // digit next to first digit has to be equal to or greater than first digit.
-                                // Ex. 567085 or 556708
-                        {
-                            resultList.Clear();
-                            for (i = originalOrder.Length - 1; i >= 0; i--)
+                            if (counter2 == originalOrder.Length - 1)
                             {
-                                if (counter2 == originalOrder.Length - 1)
+                                result = -1; //Case: 5567789
+                                break;
+                            }
+                            else
+                            {
+                                while (counter <= originalOrder.Length - counter2)
                                 {
-                                    result = -1; //Case: 5567789
-                                    break;
-                                }
-                                else
-                                {
-                                    while (counter <= originalOrder.Length - counter2)
+                                    if (originalOrder[i] == 0)
                                     {
-                                        if (originalOrder[i] == 0)
+                                        tempList.Clear();
+                                        for (j = originalOrder.Length - 1; j > i; j--) 
                                         {
-                                            tempList.Clear();
-                                            for (j = originalOrder.Length - 1; j > i; j--) 
+                                            tempList.Add(originalOrder[j]); //templist has everything to right of zero.
+                                        }
+                                        for (j = i - 1; j >= 0; j--)
+                                        {
+                                            if (originalOrder[j] != 0) // j is the same as non-zero index. This conditional must be true.
                                             {
-                                                tempList.Add(originalOrder[j]); //templist has everything to right of zero.
+                                                break;
                                             }
-                                            for (j = i - 1; j >= 0; j--)
+                                        }
+                                        for (x = j; x < i; x++) //Need to add digits between zero index and nearest non-zero digit to left.
+                                                                //Remember: i is index for zero. j is nearest non-zero to the left.
+                                        {
+                                            tempList.Add(originalOrder[x]);
+                                        }
+                                        tempList.Sort(); //Sorts list from smallest to biggest
+                                        tempList.Reverse(); // Now sorted from biggest to smallest
+                                        for (x = 0; x < j; x++)
+                                        {
+                                            resultList.Add(originalOrder[x]); //Add up to closest non-zero digit to zero
+                                        }
+                                        for (x = 0; x < 1; x++)
+                                        {
+                                            resultList.Add(originalOrder[i]); //Add zero
+                                        }
+                                        for (x = 0; x < tempList.Count(); x++) // Remember: tempList is sorted greatest to smallest
+                                        {
+                                            resultList.Add(tempList[x]);
+                                        }
+                                        foreach (long p in resultList)
+                                        {
+                                            result = 10 * result + p;
+                                        }
+                                        done = true;
+                                        break;
+                                    }
+                                    else if (originalOrder[i - counter] == 0)
+                                    {
+                                        break;
+                                    }
+                                    else if (originalOrder[i - counter] > originalOrder[i])
+                                    {
+                                        if (originalOrder[i - counter] == originalOrder[originalOrder.Length - 2] &&
+                                            originalOrder[i] == originalOrder[originalOrder.Length - 1])
+                                        {
+                                            for (x = 0; x < i - counter; x++)
                                             {
-                                                if (originalOrder[j] != 0) // j is the same as non-zero index. This conditional must be true.
-                                                {
-                                                    break;
-                                                }
-                                            }
-                                            for (x = j; x < i; x++) //Need to add digits between zero index and nearest non-zero digit to left.
-                                                                    //Remember: i is index for zero. j is nearest non-zero to the left.
-                                            {
-                                                tempList.Add(originalOrder[x]);
-                                            }
-                                            tempList.Sort(); //Sorts list from smallest to biggest
-                                            tempList.Reverse(); // Now sorted from biggest to smallest
-                                            for (x = 0; x < j; x++)
-                                            {
-                                                resultList.Add(originalOrder[x]); //Add up to closest non-zero digit to zero
+                                                resultList.Add(originalOrder[x]); //Adds up to flip point
                                             }
                                             for (x = 0; x < 1; x++)
                                             {
-                                                resultList.Add(originalOrder[i]); //Add zero
+                                                resultList.Add(originalOrder[i]); //Adds flip digit
                                             }
-                                            for (x = 0; x < tempList.Count(); x++) // Remember: tempList is sorted greatest to smallest
+                                            for (x = 0; x < 1; x++) // Remember: tempList is sorted greatest to smallest
                                             {
-                                                resultList.Add(tempList[x]);
+                                                resultList.Add(originalOrder[i - 1]); //Adds rest of digits sorted greatest to smallest
                                             }
                                             foreach (long p in resultList)
                                             {
@@ -469,78 +487,53 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                                             done = true;
                                             break;
                                         }
-                                        else if (originalOrder[i - counter] == 0)
-                                        {
-                                            break;
-                                        }
-                                        else if (originalOrder[i - counter] > originalOrder[i])
-                                        {
-                                            if (originalOrder[i - counter] == originalOrder[originalOrder.Length - 2] &&
-                                                originalOrder[i] == originalOrder[originalOrder.Length - 1])
-                                            {
-                                                for (x = 0; x < i - counter; x++)
-                                                {
-                                                    resultList.Add(originalOrder[x]); //Adds up to flip point
-                                                }
-                                                for (x = 0; x < 1; x++)
-                                                {
-                                                    resultList.Add(originalOrder[i]); //Adds flip digit
-                                                }
-                                                for (x = 0; x < 1; x++) // Remember: tempList is sorted greatest to smallest
-                                                {
-                                                    resultList.Add(originalOrder[i - 1]); //Adds rest of digits sorted greatest to smallest
-                                                }
-                                                foreach (long p in resultList)
-                                                {
-                                                    result = 10 * result + p;
-                                                }
-                                                done = true;
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                tempList.RemoveAt(counter2 - 1); //Remove to avoid double add
-                                                tempList.Add(originalOrder[i - counter]); // Add so we can sort.
-                                                tempList.Sort(); //Sorts list from smallest to biggest
-                                                tempList.Reverse(); // Now sorted from biggest to smallest
-
-                                                for (j = 0; j < i - counter; j++)
-                                                {
-                                                    resultList.Add(originalOrder[j]);
-                                                }
-                                                for (j = i - counter; j < i - counter + 1; j++)
-                                                {
-                                                    resultList.Add(originalOrder[i]);
-                                                }
-                                                for (j = 0; j < tempList.Count(); j++) // Remember: tempList is sorted greatest to smallest
-                                                {
-                                                    resultList.Add(tempList[j]);
-                                                }
-                                                foreach (long p in resultList)
-                                                {
-                                                    result = 10 * result + p;
-                                                }
-                                                done = true;
-                                                break;
-                                            }
-                                        }
                                         else
                                         {
-                                            tempList.Add(originalOrder[i - counter]);
-                                            counter++;
+                                            tempList.RemoveAt(counter2 - 1); //Remove to avoid double add
+                                            tempList.Add(originalOrder[i - counter]); // Add so we can sort.
+                                            tempList.Sort(); //Sorts list from smallest to biggest
+                                            tempList.Reverse(); // Now sorted from biggest to smallest
+
+                                            for (j = 0; j < i - counter; j++)
+                                            {
+                                                resultList.Add(originalOrder[j]);
+                                            }
+                                            for (j = i - counter; j < i - counter + 1; j++)
+                                            {
+                                                resultList.Add(originalOrder[i]);
+                                            }
+                                            for (j = 0; j < tempList.Count(); j++) // Remember: tempList is sorted greatest to smallest
+                                            {
+                                                resultList.Add(tempList[j]);
+                                            }
+                                            foreach (long p in resultList)
+                                            {
+                                                result = 10 * result + p;
+                                            }
+                                            done = true;
+                                            break;
                                         }
                                     }
-                                    counter = 1;
-                                    counter2++;
-                                    tempList.Clear();
-                                    for (j = originalOrder.Length - 1; j > originalOrder.Length - 1 - counter2; j--)
+                                    else
                                     {
-                                        tempList.Add(originalOrder[j]);
+                                        if (counter2 == 1 && counter == 1)
+                                        {
+                                            tempList.Add(originalOrder.Length - 1);
+                                        }
+                                        tempList.Add(originalOrder[i - counter]);
+                                        counter++;
                                     }
-                                    if (done == true)
-                                    {
-                                        break;
-                                    }
+                                }
+                                counter = 1;
+                                counter2++;
+                                tempList.Clear();
+                                for (j = originalOrder.Length - 1; j > originalOrder.Length - 1 - counter2; j--)
+                                {
+                                    tempList.Add(originalOrder[j]);
+                                }
+                                if (done == true)
+                                {
+                                    break;
                                 }
                             }
                         }
@@ -590,59 +583,86 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                     {
                         while (counter <= originalOrder.Length - counter2) // "counter" & "counter2" = 1 originally.
                         {
-                            if (originalOrder[j - counter] > originalOrder[j])
+                            if (originalOrder[j] == 0) //j is zero index
                             {
-                                if (originalOrder[j - counter] == originalOrder[originalOrder.Length - 2] &&
-                                    originalOrder[j] == originalOrder[originalOrder.Length - 1])
+                                tempList.Clear();
+                                for (x = originalOrder.Length - 1; x > j; x--)
                                 {
-                                    for (x = 0; x < j - counter; x++)
-                                    {
-                                        resultList.Add(originalOrder[x]); //Adds up to flip point
-                                    }
-                                    for (x = 0; x < 1; x++)
-                                    {
-                                        resultList.Add(originalOrder[j]); //Adds flip digit
-                                    }
-                                    for (x = 0; x < 1; x++) // Remember: tempList is sorted greatest to smallest
-                                    {
-                                        resultList.Add(originalOrder[j - 1]); //Adds rest of digits sorted greatest to smallest
-                                    }
-                                    foreach (long p in resultList)
-                                    {
-                                        result = 10 * result + p;
-                                    }
-                                    done = true;
-                                    break;
+                                    tempList.Add(originalOrder[x]); //templist has everything to right of zero.
                                 }
-                                else
+                                for (x = j - 1; x >= 0; x--)
                                 {
-                                    tempList.RemoveAt(counter2 - 1); //Remove to avoid double add
-                                    tempList.Add(originalOrder[j - counter]); // Add so we can sort.
-                                    tempList.Sort(); //Sorts list from smallest to biggest
-                                    tempList.Reverse(); // Now sorted from biggest to smallest
+                                    if (originalOrder[x] != 0) // x is the same as non-zero index. This conditional must be true.
+                                    {
+                                        break;
+                                    }
+                                }
+                                for (int y = x; y < j; y++) //Add digits between zero index and nearest non-zero digit to left including that digit.
+                                                        //Remember: j is index for zero. x is nearest non-zero to the left.
+                                {
+                                    tempList.Add(originalOrder[y]);
+                                }
+                                tempList.Sort(); //Sorts list from smallest to biggest
+                                tempList.Reverse(); // Now sorted from biggest to smallest
+                                for (int y = 0; y < x; y++)
+                                {
+                                    resultList.Add(originalOrder[y]); //Add up to closest non-zero digit to zero
+                                }
+                                for (int y = 0; y < 1; y++)
+                                {
+                                    resultList.Add(originalOrder[j]); //Add zero
+                                }
+                                for (int y = 0; y < tempList.Count(); y++) // Remember: tempList is sorted greatest to smallest
+                                {
+                                    resultList.Add(tempList[y]);
+                                }
+                                foreach (long p in resultList)
+                                {
+                                    result = 10 * result + p;
+                                }
+                                done = true;
+                                break;
+                            }
+                            else if (originalOrder[j - counter] == 0)
+                            {
+                                break;
+                            }
+                            else if (originalOrder[j - counter] > originalOrder[j])
+                            {
+                                tempList.RemoveAt(counter2 - 1); //Remove to avoid double add
+                                tempList.Add(originalOrder[j - counter]); // Add so we can sort.
+                                tempList.Sort(); //Sorts list from smallest to biggest
+                                tempList.Reverse(); // Now sorted from biggest to smallest
+                                for (x = 0;x < tempList.Count; x++)
+                                {
+                                    // Console.WriteLine(tempList[x]);
+                                }
 
-                                    for (x = 0; x < j - counter; x++)
-                                    {
-                                        resultList.Add(originalOrder[x]); //Adds up to flip point
-                                    }
-                                    for (x = j - counter; x < j - counter + 1; x++)
-                                    {
-                                        resultList.Add(originalOrder[j]); //Adds flip digit
-                                    }
-                                    for (x = 0; x < tempList.Count(); x++) // Remember: tempList is sorted greatest to smallest
-                                    {
-                                        resultList.Add(tempList[x]); //Adds rest of digits sorted greatest to smallest
-                                    }
-                                    foreach (long p in resultList)
-                                    {
-                                        result = 10 * result + p;
-                                    }
-                                    done = true;
-                                    break;
+                                for (x = 0; x < j - counter; x++)
+                                {
+                                    resultList.Add(originalOrder[x]); //Adds up to flip point
                                 }
+                                for (x = j - counter; x < j - counter + 1; x++)
+                                {
+                                    resultList.Add(originalOrder[j]); //Adds flip digit
+                                }
+                                for (x = 0; x < tempList.Count(); x++) // Remember: tempList is sorted greatest to smallest
+                                {
+                                    resultList.Add(tempList[x]); //Adds rest of digits sorted greatest to smallest
+                                }
+                                foreach (long p in resultList)
+                                {
+                                    result = 10 * result + p;
+                                }
+                                done = true;
+                                break;
                             }
                             else
                             {
+                                if (counter2 == 1 && counter == 1)
+                                {
+                                    tempList.Add(originalOrder.Length -1);
+                                }
                                 tempList.Add(originalOrder[j - counter]);
                                 counter++;
                             }
