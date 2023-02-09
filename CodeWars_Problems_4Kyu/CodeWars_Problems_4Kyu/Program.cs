@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 
-long n = 700006;
+long n = 57500589;
 long result = 0;
 
 int duplicateCounter = 0;
@@ -20,6 +20,8 @@ int x = 0;
 int indexOneValue = 0;
 int counter = 1;
 int counter2 = 1;
+
+bool done = false;
 
 var resultList = new List<int>();
 var tempList = new List<int>();
@@ -349,7 +351,7 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
 
             resultList.Sort();
 
-            notZeroIndex = originalOrder.Length - zeroCounter;
+            notZeroIndex = originalOrder.Length - (originalOrder.Length - zeroCounter); // confirmed correct
 
             if (resultList[notZeroIndex] == originalFirstDigit) //**** Case: original first digit was smallest non-zero digit *****
             {
@@ -359,7 +361,7 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                 {
                     result = -1;
                 }
-                else //Case: first original duplicate has at least one duplicate
+                else //Case: first original digit has at least one duplicate
                         //Ex. 50765 or 58765 or 55505 or 55550
                 {
                     if (numberOfDuplicates == originalOrder.Length - 2) //Case: all digits except one are duplicates. Ex. 55550 or 50555
@@ -399,7 +401,7 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                             }
                         }
                     }
-                    else //Number of gigits is at least 4
+                    else //Number of digits is at least 4
                             //Original first digit was smallest non-zero digit
                             //Case: first original digit has at least one duplicate
                             //At least 3 non - zero digits that are not the same
@@ -414,7 +416,7 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                         else // digit next to first digit has to be equal to or greater than first digit.
                                 // Ex. 567085 or 556708
                         {
-                            tempList.Add(originalOrder[originalOrder.Length - 1]);
+                            resultList.Clear();
                             for (i = originalOrder.Length - 1; i >= 0; i--)
                             {
                                 if (counter2 == originalOrder.Length - 1)
@@ -424,11 +426,11 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                                 }
                                 else
                                 {
-                                    while (counter < originalOrder.Length - counter2)
+                                    while (counter <= originalOrder.Length - counter2)
                                     {
-                                        if (originalOrder[i - counter] > originalOrder[i]) // Ex. 545 ---> 454
+                                        if (originalOrder[i - counter] > originalOrder[i])
                                         {
-
+                                            tempList.Add(originalOrder[i - counter]);
                                             tempList.Sort(); //Sorts list from smallest to biggest
                                             tempList.Reverse(); // Now sorted from biggest to smallest
 
@@ -448,6 +450,7 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                                             {
                                                 result = 10 * result + p;
                                             }
+                                            done = true;
                                             break;
                                         }
                                         else
@@ -455,12 +458,17 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                                             tempList.Add(originalOrder[i - counter]);
                                             counter++;
                                         }
-                                        counter = 1;
-                                        counter2++;
-                                        tempList.Clear();
-                                        tempList.RemoveRange(counter2 - 1, tempList.Count() - (counter2 - 1)); //Removes all entries in list except...
-                                                                                                                //the ones we want to keep. Don't want to
-                                                                                                                //duplicated when we add to list next iteration.
+                                    }
+                                    counter = 1;
+                                    counter2++;
+                                    if (counter2 == 2)
+                                    {
+                                        tempList.Insert(0,originalOrder[originalOrder.Length - 1]);
+                                    }
+                                    tempList.RemoveRange(counter2, tempList.Count() - counter2); //Removes all entries in list except the ones we want to keep. Don't want to duplicate when we add to list next iteration.
+                                    if (done == true)
+                                    {
+                                        break;
                                     }
                                 }
                             }
@@ -473,22 +481,48 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                     //Note: There does not need to be any zeros either.
                     //Remember: There must be at least 3 non-zero numbers
             {
-                tempList.Add(originalOrder[originalOrder.Length - 1]);
+                resultList.Clear();
                 for (j = originalOrder.Length - 1; j >= 0; j--)
                 {
                     if (counter2 == originalOrder.Length - 1)
 
                     {
-                        Console.WriteLine("Error #5: This should never happen. # ");
-                        break;
+                        if (originalOrder[0] > originalOrder[originalOrder.Length - 1])
+                        {
+                            tempList.Clear();
+                            for (x = 0; x < originalOrder.Length - 1; x++)
+                            {
+                                tempList.Add(originalOrder[x]); //Add all but first and last elements of original array
+                            }
+                            tempList.Sort();
+                            tempList.Reverse(); //List is not biggest to smallest
+                            for (x = 0; x < 1; x++)
+                            {
+                                resultList.Add(originalOrder[originalOrder.Length - 1]);
+                            }
+                            for (x = 0; x < tempList.Count(); x++) // Remember: tempList is sorted greatest to smallest
+                            {
+                                resultList.Add(tempList[x]);
+                            }
+                            foreach (long p in resultList)
+                            {
+                                result = 10 * result + p;
+                            }
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error #5: This should never happen.");
+                            break;
+                        }
                     }
                     else
                     {
-                        while (counter < originalOrder.Length - counter2) // "counter" & "counter2" = 1 originally.
+                        while (counter <= originalOrder.Length - counter2) // "counter" & "counter2" = 1 originally.
                         {
-                            if (originalOrder[j - counter] > originalOrder[j]) // Ex. 545 ---> 454
+                            if (originalOrder[j - counter] > originalOrder[j])
                             {
-
+                                tempList.Add(originalOrder[j - counter]);
                                 tempList.Sort(); //Sorts list from smallest to biggest
                                 tempList.Reverse(); // Now sorted from biggest to smallest
 
@@ -496,7 +530,7 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                                 {
                                     resultList.Add(originalOrder[x]);
                                 }
-                                for (x = j - counter; x < j - counter + 1; j++)
+                                for (x = j - counter; x < j - counter + 1; x++)
                                 {
                                     resultList.Add(originalOrder[j]);
                                 }
@@ -508,6 +542,7 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                                 {
                                     result = 10 * result + p;
                                 }
+                                done = true;
                                 break;
                             }
                             else
@@ -518,8 +553,15 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
                         }
                         counter = 1;
                         counter2++;
-                        tempList.Clear();
-                        tempList.RemoveRange(counter2 - 1, tempList.Count() - (counter2 - 1));
+                        if (counter2 == 2)
+                        {
+                            tempList.Insert(0,originalOrder[originalOrder.Length - 1]);
+                        }
+                        tempList.RemoveRange(counter2, tempList.Count() - counter2); //Removes all entries in list except the ones we want to keep. Don't want to duplicate when we add to list next iteration.
+                        if (done == true)
+                        {
+                            break;
+                        }
                     }
                 }
             }
@@ -528,7 +570,7 @@ else //Case 3: Three or more digits originally (i.e. 100 ~ )
     }
     else
     {
-        Console.WriteLine("Error #5: Should never happen.");
+        Console.WriteLine("Error #6: Should never happen.");
     }
 }
 
